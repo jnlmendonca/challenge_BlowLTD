@@ -20,9 +20,9 @@ servers:
 
 components:
     schemas:
-        # Error object. Used in error responses that require extra details.
         Error:
             type: object
+            description: Error object. Used in error responses that require extra details.
             properties:
                 message:
                     type: string
@@ -35,48 +35,48 @@ components:
                 type: InvalidParameterException
                 code: 123
 
-        # Id string. Contains the pattern for allowed IDs (UUID v4)
         Id:
             type: string
+            description: Id string. Contains the pattern for allowed IDs (UUID v4).
             pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
             example:
                 531de458-876f-42fe-856b-4821889c44d2 
 
-        # Currency enumerator. Contains allowed values for currency type.
         Currency:
             type: string
+            description: Currency enumerator. Contains allowed values for currency type.
             enum:
              - GBP
              - EUR
              - USD
 
-        # Payment Scheme Type enumerator. Contains allowed values.
         PaymentSchemeType:
             type: string
+            description: Payment Scheme Type enumerator.
             enum:
              - FPS
 
-        # Payment Type enumerator. Contains allowed values.
         PaymentType:
             type: string
+            description: Payment Type enumerator.
             enum:
              - Credit
 
-        # Scheme Payment Type enumerator. Contains allowed values.
         SchemePaymentType:
             type: string
+            description: Scheme Payment Type enumerator.
             enum:
              - ImmediatePayment
         
-        # Scheme Payment Sub-Type enumerator. Contains allowed values.
         SchemePaymentSubType:
             type: string
+            description: Scheme Payment Sub-Type enumerator.
             enum:
              - InternetBanking
 
-        # Payment object. Main API resource.
         Payment:
             type: object
+            description: Payment object. Main API resource.
             properties:
                 id:
                     $ref: '#/components/schemas/Id'
@@ -93,9 +93,9 @@ components:
                 attributes:
                     $ref: '#/components/schemas/PaymentAttributes/example'
 
-        # Payment object for input purposes. Does not contain id property.
         PaymentInput:
             type: object
+            description: Payment object for input purposes. Does not contain id property.
             properties:
                 version:
                     type: number
@@ -109,12 +109,13 @@ components:
                 attributes:
                     $ref: '#/components/schemas/PaymentAttributes/example'
 
-        # Payment Attributes object. Contains most of the information related to a payment.
         PaymentAttributes:
             type: object
+            description: Payment Attributes object. Contains most of the information related to a payment.
             properties:
-                amount:     # Amount paid
+                amount:
                     type: number
+                    description: Amount paid
                     minimum: 0
                 currency:   # Currency of the payment
                     $ref: '#/components/schemas/Currency'
@@ -141,8 +142,9 @@ components:
                 end_to_end_reference:
                     type: string
                     nullable: true
-                processing_timestamp:   # Timestamp for the payment's processing operation. Replaces the processing_date string.
+                processing_timestamp:
                     type: number
+                    description: Timestamp for the payment's processing operation. Replaces the processing_date string.
                 numeric_reference:
                     type: string
                     pattern: '^[0-9]+$'
