@@ -25,3 +25,5 @@ The request contains very few details which can be summed in a handful of bullet
 For the design stage of the test, only the first four points seem to matter. The API must be RESTful and that means using a proper syntax and request methods.
 
 I will use **OpenAPI version 3** specification to create a description of the payment API. This description can then be used in conjunction with other tools to validate requests, easily test the API implementation and create the documentation as requested.
+
+I plan to use *node.js* and *express* to run the implementation stage. The code should run inside a docker container exposed of port 3000.

@@ -1,0 +1,19 @@
+openapi: 3.0.2
+info:
+  title: BlowLTD's BDT Payment API
+  version: V1
+  description: |
+    # BlowLTD's Backend Developer Test API
+    This API is the answer to BlowLTD's Backend Developer Test. It represents part of a payments system API.
+    
+    ## Requirements
+    - API should be RESTFUL
+    - API should be able to
+        - Fetch a payment resource
+        - Create, update and delete a payment resource
+        - List a collection of payment resources
+        - Persist resource state (e.g. to a database)
+
+servers:
+    - url: http://localhost:3000
+      description: Test server. Will run inside docker container and be exposed on port 3000.
