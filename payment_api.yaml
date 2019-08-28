@@ -92,7 +92,7 @@ components:
                 version: 0
                 attributes:
                     $ref: '#/components/schemas/PaymentAttributes/example'
-                   
+
         # Payment object for input purposes. Does not contain id property.
         PaymentInput:
             type: object
@@ -165,3 +165,133 @@ components:
                 payment_purpose: Paying for goods/services
                 end_to_end_reference: Wil piano Jan
                 processing_timestamp: 1566998801878
+
+paths:
+    /payments:
+        get:
+            summary: Returns a list of payments.
+            description: Returns a list of the payments in the database.
+            parameters:
+                - name: limit
+                  description: The maximum number of payments to return in the response
+                  in: query
+                  required: false
+                  schema:
+                    type: integer
+                    minimum: 1
+                    maximum: 50
+                    default: 10
+                - name: offset
+                  description: The number of payments to skip before returning the response
+                  in: query
+                  required: false
+                  schema:
+                    type: integer
+                    minimum: 0
+                    default: 0
+            responses:
+                '200':
+                    description: A JSON array of payments.
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Payment'
+                '500':
+                    description: A server error occurred while processing request.
+
+        post:
+            summary: Creates a payment.
+            description: Creates a payment with the parameters sent in the request's body. Returns the payment details if successful.
+            requestBody:
+                description: The JSON detail of the payment
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/PaymentInput'
+            responses:
+                '201':
+                    description: A JSON detail of the payment. The creation was successful.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Payment'
+                '400':
+                    description: Payment creation failed. Client input is not valid.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                '500':
+                    description: A server error occurred while processing request.
+
+    /payments/{id}:
+        get:
+            summary: Returns a payment.
+            description: Returns a single payment from the database, if it exists and matches the provided ID.
+            parameters:
+                - name: id
+                  description: The payment ID
+                  in: path
+                  required: true
+                  schema:
+                    $ref: '#/components/schemas/Id'
+            responses:
+                '200':
+                    description: A JSON detail of the payment.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Payment'
+                '404':
+                    description: No payment matching the provided ID exists in the database.
+                '500':
+                    description: A server error occurred while processing request.
+
+        delete:
+            summary: Delete a payment.
+            description: Deletes a payment matching the provided ID, from the database, if it exists.
+            parameters:
+                - name: id
+                  description: The payment ID
+                  in: path
+                  required: true
+                  schema:
+                    $ref: '#/components/schemas/Id'
+            responses:
+                '204':
+                    description: Payment was deleted.
+                '404':
+                    description: No payment matching the provided ID exists in the database.
+                '500':
+                    description: A server error occurred while processing request.
+
+        patch:
+            summary: Update a payment.
+            description: Updates a payment matching the provided ID, in the database, if it exists.
+            parameters:
+                - name: id
+                  description: The payment ID
+                  in: path
+                  required: true
+                  schema:
+                    $ref: '#/components/schemas/Id'
+            responses:
+                '200':
+                    description: A JSON detail of the payment.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Payment'
+                '400':
+                    description: Payment update failed. Client input is not valid.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
+                '404':
+                    description: No payment matching the provided ID exists in the database.
+                '500':
+                    description: A server error occurred while processing request.
