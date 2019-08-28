@@ -26,4 +26,6 @@ For the design stage of the test, only the first four points seem to matter. The
 
 I will use **OpenAPI version 3** specification to create a description of the payment API. This description can then be used in conjunction with other tools to validate requests, easily test the API implementation and create the documentation as requested.
 
+My original plan was to use a tool that could take the API definition file as an input and return a fully formatted PDF with its description. I tried several tools like [rapi-pdf](https://mrin9.github.io/RapiPdf/) and [swagger-spec-to-pdf](https://github.com/agreatfool/swagger-spec-to-pdf). However, at the time they were either broken or I could't get the results with the quality I expected. **I ended up using what many suggest: use [Swagger Editor](https://editor.swagger.io) to convert to html and then print as PDF.** I'm not 100% happy with the result, so I'll try to come up with a better solution.
+
 I plan to use *node.js* and *express* to run the implementation stage. The code should run inside a docker container exposed of port 3000.
