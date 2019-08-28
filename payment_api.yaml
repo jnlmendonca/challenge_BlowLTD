@@ -17,3 +17,151 @@ info:
 servers:
     - url: http://localhost:3000
       description: Test server. Will run inside docker container and be exposed on port 3000.
+
+components:
+    schemas:
+        # Error object. Used in error responses that require extra details.
+        Error:
+            type: object
+            properties:
+                message:
+                    type: string
+                type:
+                    type: string
+                code:
+                    type: string
+            example:
+                message: Invalid "payment scheme type"
+                type: InvalidParameterException
+                code: 123
+
+        # Id string. Contains the pattern for allowed IDs (UUID v4)
+        Id:
+            type: string
+            pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+            example:
+                531de458-876f-42fe-856b-4821889c44d2 
+
+        # Currency enumerator. Contains allowed values for currency type.
+        Currency:
+            type: string
+            enum:
+             - GBP
+             - EUR
+             - USD
+
+        # Payment Scheme Type enumerator. Contains allowed values.
+        PaymentSchemeType:
+            type: string
+            enum:
+             - FPS
+
+        # Payment Type enumerator. Contains allowed values.
+        PaymentType:
+            type: string
+            enum:
+             - Credit
+
+        # Scheme Payment Type enumerator. Contains allowed values.
+        SchemePaymentType:
+            type: string
+            enum:
+             - ImmediatePayment
+        
+        # Scheme Payment Sub-Type enumerator. Contains allowed values.
+        SchemePaymentSubType:
+            type: string
+            enum:
+             - InternetBanking
+
+        # Payment object. Main API resource.
+        Payment:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/Id'
+                version:
+                    type: number
+                organisation_id:
+                    $ref: '#/components/schemas/Id'
+                attributes:
+                    $ref: '#/components/schemas/PaymentAttributes'
+            example:
+                id: 4ee3a8d8-ca7b-4290-a52c-dd5b6165ec43
+                organisation_id: 743d5b63-8e6f-432e-a8fa-c5d8d2ee5fcb
+                version: 0
+                attributes:
+                    $ref: '#/components/schemas/PaymentAttributes/example'
+                   
+        # Payment object for input purposes. Does not contain id property.
+        PaymentInput:
+            type: object
+            properties:
+                version:
+                    type: number
+                organisation_id:
+                    $ref: '#/components/schemas/Id'
+                attributes:
+                    $ref: '#/components/schemas/PaymentAttributes'
+            example:
+                organisation_id: 743d5b63-8e6f-432e-a8fa-c5d8d2ee5fcb
+                version: 0
+                attributes:
+                    $ref: '#/components/schemas/PaymentAttributes/example'
+
+        # Payment Attributes object. Contains most of the information related to a payment.
+        PaymentAttributes:
+            type: object
+            properties:
+                amount:     # Amount paid
+                    type: number
+                    minimum: 0
+                currency:   # Currency of the payment
+                    $ref: '#/components/schemas/Currency'
+                beneficiary_party_id:   # ID of the beneficiary party. Replaces all the retails pertaining to the beneficiary_party.
+                    $ref: '#/components/schemas/Id'
+                debtor_party_id:    # ID of the debtor party. Replaces all the retails pertaining to the debtor_party.
+                    $ref: '#/components/schemas/Id'
+                sponsor_party_id:   # ID of the sponsor party. Replaces all the retails pertaining to the sponsor_party.
+                    $ref: '#/components/schemas/Id'
+                payment_scheme_type:
+                    $ref: '#/components/schemas/PaymentSchemeType'
+                payment_type:
+                    $ref: '#/components/schemas/PaymentType'
+                scheme_payment_type:
+                    $ref: '#/components/schemas/SchemePaymentType'
+                scheme_payment_sub_type:
+                    $ref: '#/components/schemas/SchemePaymentSubType'
+                reference:
+                    type: string
+                    nullable: true
+                payment_purpose:
+                    type: string
+                    nullable: true
+                end_to_end_reference:
+                    type: string
+                    nullable: true
+                processing_timestamp:   # Timestamp for the payment's processing operation. Replaces the processing_date string.
+                    type: number
+                numeric_reference:
+                    type: string
+                    pattern: '^[0-9]+$'
+                payment_id:
+                    type: string
+                    pattern: '^[0-9]+$'
+            example:
+                amount: 123.45
+                currency: GBP
+                beneficiary_party_id: 11998de5-2b6a-44ae-a281-98794c539ec7
+                debtor_party_id: db8e6fe6-1dd0-4b32-a0cc-9a96085bc88b
+                sponsor_party_id: 013f1dfc-f1c3-4ed8-b9f3-2d8b78154f96
+                payment_scheme_type: FPS
+                payment_type: Credit
+                scheme_payment_type: ImmediatePayment
+                scheme_payment_sub_type: InternetBanking
+                reference: Payment for Em's piano lessons
+                numeric_reference: 123456789
+                payment_id: 123456789012345
+                payment_purpose: Paying for goods/services
+                end_to_end_reference: Wil piano Jan
+                processing_timestamp: 1566998801878
