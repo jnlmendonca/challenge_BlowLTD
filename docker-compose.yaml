@@ -1,0 +1,7 @@
+version: '3'
+services:
+  blowltd_payments_server:
+    build: .
+    command: ["npm", "start"]
+    ports:
+      - "3000:3000"

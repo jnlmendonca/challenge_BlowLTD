@@ -3,6 +3,33 @@
 ## Instructions
 This section will contain the instructions on how to run the code for implementation part of the assessment. More information on the assessment can be found in **CHALLENGE.pdf**.
 
+To run the code you only need to have Docker and Compose installed.
+
+When I create docker containers or composes, I usually keep my docker/compose commands organised in a **Makefile**. If you can already run `make xpto` command in your terminal, great! If you can not, I'll still detail all the needed instructions below. **All commands should be executed from the repository's root folder**.
+
+### Using *make*
+To run the code:
+```
+make server
+```
+
+To stop the compose:
+```
+make server_down
+```
+
+### Using *docker/compose* commands
+To run the code:
+```
+docker-compose up --force-recreate --build
+```
+
+To stop the compose:
+```
+docker-compose down
+```
+
+
 ## Considerations
 This section will contain my considerations while solving both parts of the assessment. These will better explain the reasoning behind my decisions. As it is expected, while solving the tasks these considerations and reasoning may change and as such, this section may also change accordingly.
 
@@ -29,3 +56,6 @@ I will use **OpenAPI version 3** specification to create a description of the pa
 My original plan was to use a tool that could take the API definition file as an input and return a fully formatted PDF with its description. I tried several tools like [rapi-pdf](https://mrin9.github.io/RapiPdf/) and [swagger-spec-to-pdf](https://github.com/agreatfool/swagger-spec-to-pdf). However, at the time they were either broken or I could't get the results with the quality I expected. **I ended up using what many suggest: use [Swagger Editor](https://editor.swagger.io) to convert to html and then print as PDF.** I'm not 100% happy with the result, so I'll try to come up with a better solution.
 
 I plan to use *node.js* and *express* to run the implementation stage. The code should run inside a docker container exposed of port 3000.
+
+### Implementation Task
+I will be using *node.js* and *express* to run the implementation stage. The code will run inside a docker container exposed of port 3000. Also, I will use Compose to run the server container next to another container running the database service. The only tools you will need to run the code are Docker and Docker Compose.
