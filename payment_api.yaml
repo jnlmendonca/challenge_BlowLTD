@@ -42,6 +42,7 @@ components:
         Id:
             type: string
             description: Id string. Contains the pattern for allowed IDs (UUID v4).
+            readOnly: true
             pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
             example:
                 531de458-876f-42fe-856b-4821889c44d2 
@@ -92,22 +93,6 @@ components:
                     $ref: '#/components/schemas/PaymentAttributes'
             example:
                 id: 4ee3a8d8-ca7b-4290-a52c-dd5b6165ec43
-                organisation_id: 743d5b63-8e6f-432e-a8fa-c5d8d2ee5fcb
-                version: 0
-                attributes:
-                    $ref: '#/components/schemas/PaymentAttributes/example'
-
-        PaymentInput:
-            type: object
-            description: Payment object for input purposes. Does not contain id property.
-            properties:
-                version:
-                    type: number
-                organisation_id:
-                    $ref: '#/components/schemas/Id'
-                attributes:
-                    $ref: '#/components/schemas/PaymentAttributes'
-            example:
                 organisation_id: 743d5b63-8e6f-432e-a8fa-c5d8d2ee5fcb
                 version: 0
                 attributes:
@@ -216,7 +201,7 @@ paths:
                 content:
                   application/json:
                     schema:
-                      $ref: '#/components/schemas/PaymentInput'
+                      $ref: '#/components/schemas/Payment'
             responses:
                 '201':
                     description: A JSON detail of the payment. The creation was successful.
