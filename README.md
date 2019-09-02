@@ -18,6 +18,16 @@ To stop the compose:
 make server_down
 ```
 
+To run the test suite:
+```
+make test
+```
+
+To stop the test suite compose:
+```
+make test_down
+```
+
 ### Using *docker/compose* commands
 To run the code:
 ```
@@ -29,6 +39,15 @@ To stop the compose:
 docker-compose down
 ```
 
+To run the test suite:
+```
+docker-compose -f docker-compose.yaml -f docker-compose.test.yaml up --force-recreate --build --abort-on-container-exit
+```
+
+To stop the test suite compose:
+```
+docker-compose -f docker-compose.yaml -f docker-compose.test.yaml down
+```
 
 ## Considerations
 This section will contain my considerations while solving both parts of the assessment. These will better explain the reasoning behind my decisions. As it is expected, while solving the tasks these considerations and reasoning may change and as such, this section may also change accordingly.
@@ -59,3 +78,7 @@ I plan to use *node.js* and *express* to run the implementation stage. The code 
 
 ### Implementation Task
 I will be using *node.js* and *express* to run the implementation stage. The code will run inside a docker container exposed of port 3000. Also, I will use Compose to run the server container next to another container running the database service. The only tools you will need to run the code are Docker and Docker Compose.
+
+I will be using [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/) to create a TDD/BDD test suite. [MongoDB](https://www.mongodb.com) will be the database and [Mongoose](https://mongoosejs.com/) will serve as ODM.
+
+Because the MongoDB container may take longer to be ready than the app one takes to start sending requests, I'll be using [wait-for-it](https://github.com/vishnubob/wait-for-it) as sugested in https://docs.docker.com/compose/startup-order/ to make the app container wait before running the app *start command*.

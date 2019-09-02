@@ -1,14 +1,8 @@
-const express = require('express');
+const app = require('./app').default
 
 // Constants
-const PORT = 3000;
-const HOST = '0.0.0.0';
+const PORT = 3000
+const HOST = '0.0.0.0'
 
-// App
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Hello world\n');
-});
-
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+app.listen(PORT, HOST)
+console.log(`Running on http://${HOST}:${PORT}`)
