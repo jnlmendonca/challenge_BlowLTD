@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
-  res.send('Hello world\n')
+  res.send('Welcome to the payments server. Use the API endpoints to interact with the payment records.\n')
 })
 app.use('/api', api)
 
