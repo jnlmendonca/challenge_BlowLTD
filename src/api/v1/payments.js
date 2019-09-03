@@ -61,8 +61,36 @@ function createPayment (req, res, next) {
     })
 }
 
+
+function deletePayment (req, res, next) {
+
+    // Validate payment id
+    const idFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+
+    if (!req.params.id || !idFormat.test(req.params.id)) {
+        return res.status(400).send(errors.InvalidIdError)
+    }
+
+    models.Payment.findOne({_id: req.params.id}, (err, payment) => {
+        if (err || !payment) {
+            console.log('Error deleting payment')
+            return res.status(404).send()
+        }
+
+        models.Payment.deleteOne({_id: req.params.id}, (err) => {
+            if (err) {
+                console.log('Error deleting payment')
+                return res.status(500).send()
+            }
+
+            return res.status(204).send()
+        })
+    })
+}
+
 module.exports = {
     listPayments,
     retrievePayment,
-    createPayment
+    createPayment,
+    deletePayment
 }
