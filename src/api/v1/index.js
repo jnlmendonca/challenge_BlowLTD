@@ -5,5 +5,6 @@ const payments = require('./payments')
 const v1 = express.Router()
 v1.get('/payments', payments.listPayments)
 v1.get('/payments/:id', payments.retrievePayment)
+v1.post('/payments', payments.createPayment)
 
 module.exports = v1

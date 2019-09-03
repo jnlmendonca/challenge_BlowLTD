@@ -16,8 +16,10 @@
   "author": "José Mendonça <jnl.mendonca@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "mongoose": "^5.6.11",
+    "supertest": "^4.0.2",
     "uuid": "^3.3.3"
   },
   "devDependencies": {

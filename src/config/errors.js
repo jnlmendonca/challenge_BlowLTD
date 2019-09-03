@@ -1,4 +1,4 @@
-const InvalidPostDataError = {
+const InvalidDataError = {
     message: 'The data sent in the POST request body is invalid.',
     type: 'InvalidDataError',
     code: 1
@@ -11,6 +11,6 @@ const InvalidIdError = {
 }
 
 module.exports = {
-    InvalidPostDataError,
+    InvalidDataError,
     InvalidIdError
 }
