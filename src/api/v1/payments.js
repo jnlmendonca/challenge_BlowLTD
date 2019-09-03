@@ -24,7 +24,7 @@ function listPayments (req, res, next) {
             console.log('Error finding payments')
         }
 
-        return res.status(200).send(payments)
+        return res.status(200).json(payments)
     })
 }
 
@@ -44,7 +44,7 @@ function retrievePayment (req, res, next) {
             return res.status(404).send()
         }
 
-        return res.status(200).send(payment)
+        return res.status(200).json(payment)
     })
 }
 
@@ -88,9 +88,35 @@ function deletePayment (req, res, next) {
     })
 }
 
+
+function updatePayment (req, res, next) {
+
+    // Validate payment id
+    const idFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+
+    if (!req.params.id || !idFormat.test(req.params.id)) {
+        return res.status(400).send(errors.InvalidIdError)
+    }
+
+    models.Payment.findOneAndUpdate({_id: req.params.id}, req.body, {new: true, useFindAndModify: false, fields: {createdAt: 0, updatedAt: 0, __v: 0}}, (err, payment) => {
+        if (err) {
+            console.log('Error updating payment')
+            return res.status(400).json(errors.InvalidDataError)
+        }
+
+        if (!payment) {
+            console.log('Error updating payment')
+            return res.status(404).send()
+        }
+
+        return res.status(200).json(payment)
+    })
+}
+
 module.exports = {
     listPayments,
     retrievePayment,
     createPayment,
-    deletePayment
+    deletePayment,
+    updatePayment
 }

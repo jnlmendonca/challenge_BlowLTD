@@ -41,7 +41,7 @@ docker-compose down
 
 To run the test suite:
 ```
-docker-compose -f docker-compose.yaml -f docker-compose.test.yaml up --force-recreate --build --abort-on-container-exit
+docker-compose -f docker-compose.yaml -f docker-compose.test.yaml up --force-recreate --build --abort-on-container-exit --exit-code-from blowltd_payments_server
 ```
 
 To stop the test suite compose:
