@@ -299,105 +299,6 @@ describe("api/v1", () => {
             expect(response.body.attributes).to.have.property('processing_timestamp')
         })
 
-        it("should return a 400 error if debtor party and beneficiary party are the same", async () => {
-
-            // Populate DB for test - 1 payment record
-            const payment = new models.Payment({
-                version: 1,
-                organisation_id: '000000',
-                attributes: {
-                    amount: 123.45,
-                    currency: 'EUR',
-                    beneficiary_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    debtor_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    sponsor_party_id: '31bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    payment_scheme_type: 'FPS',
-                    payment_type: 'Credit',
-                    scheme_payment_type: 'ImmediatePayment',
-                    scheme_payment_sub_type: 'InternetBanking',
-                    reference: 'AAA',
-                    payment_purpose: 'AAA',
-                    end_to_end_reference: 'AAA',
-                    numeric_reference: '0001',
-                    payment_id: '123123',
-                }
-            })
-            await payment.save()
-
-            // Make request
-            const response = await request(app).get("/api/v1/payments/" + payment._id)
-
-            // Evaluate response
-            expect(response.status).to.equal(400)
-            expect(response.body).to.deep.equal(errors.InvalidDataError)
-        })
-
-        it("should return a 400 error if debtor party and sponsor party are the same", async () => {
-
-            // Populate DB for test - 1 payment record
-            const payment = new models.Payment({
-                version: 1,
-                organisation_id: '000000',
-                attributes: {
-                    amount: 123.45,
-                    currency: 'EUR',
-                    beneficiary_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    debtor_party_id: '31bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    sponsor_party_id: '31bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    payment_scheme_type: 'FPS',
-                    payment_type: 'Credit',
-                    scheme_payment_type: 'ImmediatePayment',
-                    scheme_payment_sub_type: 'InternetBanking',
-                    reference: 'AAA',
-                    payment_purpose: 'AAA',
-                    end_to_end_reference: 'AAA',
-                    numeric_reference: '0001',
-                    payment_id: '123123',
-                }
-            })
-            await payment.save()
-
-            // Make request
-            const response = await request(app).get("/api/v1/payments/" + payment._id)
-
-            // Evaluate response
-            expect(response.status).to.equal(400)
-            expect(response.body).to.deep.equal(errors.InvalidDataError)
-        })
-
-        it("should return a 400 error if beneficiary party and sponsor party are the same", async () => {
-
-            // Populate DB for test - 1 payment record
-            const payment = new models.Payment({
-                version: 1,
-                organisation_id: '000000',
-                attributes: {
-                    amount: 123.45,
-                    currency: 'EUR',
-                    beneficiary_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    debtor_party_id: '21bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    sponsor_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    payment_scheme_type: 'FPS',
-                    payment_type: 'Credit',
-                    scheme_payment_type: 'ImmediatePayment',
-                    scheme_payment_sub_type: 'InternetBanking',
-                    reference: 'AAA',
-                    payment_purpose: 'AAA',
-                    end_to_end_reference: 'AAA',
-                    numeric_reference: '0001',
-                    payment_id: '123123',
-                }
-            })
-            await payment.save()
-
-            // Make request
-            const response = await request(app).get("/api/v1/payments/" + payment._id)
-
-            // Evaluate response
-            expect(response.status).to.equal(400)
-            expect(response.body).to.deep.equal(errors.InvalidDataError)
-        })
-
         it("should return a 404 error for a non-existent ID", async () => {
 
             // Populate DB for test - 20 payment records
@@ -487,8 +388,8 @@ describe("api/v1", () => {
                     amount: 123.45,
                     currency: 'EUR',
                     beneficiary_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    debtor_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
-                    sponsor_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    debtor_party_id: '21bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    sponsor_party_id: '31bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
                     payment_scheme_type: 'FPS',
                     payment_type: 'Credit',
                     scheme_payment_type: 'ImmediatePayment',
@@ -924,6 +825,120 @@ describe("api/v1", () => {
             // Evaluate response
             expect(response.status).to.equal(400)
             expect(response.body).to.deep.equal(errors.InvalidDataError)
+
+            // Evaluate effect on DB
+            models.Payment.find({}, (err, payments) => {
+                expect(err).to.be.null
+                expect(payments.length).to.equal(0)
+            })
+        })
+
+        it("should return a 400 error if debtor party and beneficiary party are the same", async () => {
+
+            // Define invalid request data
+            let invalidPaymentData = {
+                version: 1,
+                organisation_id: '000000',
+                attributes: {
+                    amount: 123.45,
+                    currency: 'EUR',
+                    beneficiary_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    debtor_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    sponsor_party_id: '31bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    payment_scheme_type: 'FPS',
+                    payment_type: 'Credit',
+                    scheme_payment_type: 'ImmediatePayment',
+                    scheme_payment_sub_type: 'InternetBanking',
+                    reference: 'AAA',
+                    payment_purpose: 'AAA',
+                    end_to_end_reference: 'AAA',
+                    numeric_reference: '0001',
+                    payment_id: '123123',
+                }
+            }
+
+            // Make requests
+            const response = await request(app).post("/api/v1/payments/").send(invalidPaymentData)
+
+            // Evaluate response
+            expect(response.status).to.equal(400)
+            expect(response.body).to.deep.equal(errors.BusinessRulePartyConflictError)
+
+            // Evaluate effect on DB
+            models.Payment.find({}, (err, payments) => {
+                expect(err).to.be.null
+                expect(payments.length).to.equal(0)
+            })
+        })
+
+        it("should return a 400 error if debtor party and sponsor party are the same", async () => {
+
+            // Define invalid request data
+            let invalidPaymentData = {
+                version: 1,
+                organisation_id: '000000',
+                attributes: {
+                    amount: 123.45,
+                    currency: 'EUR',
+                    beneficiary_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    debtor_party_id: '31bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    sponsor_party_id: '31bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    payment_scheme_type: 'FPS',
+                    payment_type: 'Credit',
+                    scheme_payment_type: 'ImmediatePayment',
+                    scheme_payment_sub_type: 'InternetBanking',
+                    reference: 'AAA',
+                    payment_purpose: 'AAA',
+                    end_to_end_reference: 'AAA',
+                    numeric_reference: '0001',
+                    payment_id: '123123',
+                }
+            }
+
+            // Make request
+            const response = await request(app).post("/api/v1/payments/").send(invalidPaymentData)
+
+            // Evaluate response
+            expect(response.status).to.equal(400)
+            expect(response.body).to.deep.equal(errors.BusinessRulePartyConflictError)
+
+            // Evaluate effect on DB
+            models.Payment.find({}, (err, payments) => {
+                expect(err).to.be.null
+                expect(payments.length).to.equal(0)
+            })
+        })
+
+        it("should return a 400 error if beneficiary party and sponsor party are the same", async () => {
+
+            // Define invalid request data
+            let invalidPaymentData = {
+                version: 1,
+                organisation_id: '000000',
+                attributes: {
+                    amount: 123.45,
+                    currency: 'EUR',
+                    beneficiary_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    debtor_party_id: '21bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    sponsor_party_id: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+                    payment_scheme_type: 'FPS',
+                    payment_type: 'Credit',
+                    scheme_payment_type: 'ImmediatePayment',
+                    scheme_payment_sub_type: 'InternetBanking',
+                    reference: 'AAA',
+                    payment_purpose: 'AAA',
+                    end_to_end_reference: 'AAA',
+                    numeric_reference: '0001',
+                    payment_id: '123123',
+                }
+            }
+
+            // Make request
+            const response = await request(app).post("/api/v1/payments/").send(invalidPaymentData)
+
+            // Evaluate response
+            expect(response.status).to.equal(400)
+            expect(response.body).to.deep.equal(errors.BusinessRulePartyConflictError)
 
             // Evaluate effect on DB
             models.Payment.find({}, (err, payments) => {

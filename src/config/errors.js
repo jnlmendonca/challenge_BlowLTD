@@ -10,7 +10,14 @@ const InvalidIdError = {
     code: 2
 }
 
+const BusinessRulePartyConflictError = {
+    message: 'The same party is being selected for two different roles in the payment.',
+    type: 'BusinessRulePartyConflictError',
+    code: 3
+}
+
 module.exports = {
     InvalidDataError,
-    InvalidIdError
+    InvalidIdError,
+    BusinessRulePartyConflictError
 }
