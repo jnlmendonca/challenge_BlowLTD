@@ -158,7 +158,7 @@ components:
                 processing_timestamp: 1566998801878
 
 paths:
-    /payments:
+    /api/v1/payments:
         get:
             summary: Returns a list of payments.
             description: Returns a list of the payments in the database.
@@ -218,7 +218,7 @@ paths:
                 '500':
                     description: A server error occurred while processing request.
 
-    /payments/{id}:
+    /api/v1/payments/{id}:
         get:
             summary: Returns a payment.
             description: Returns a single payment from the database, if it exists and matches the provided ID.
