@@ -236,6 +236,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Payment'
+                '400':
+                    description: Payment retrieval failed. ID is not valid.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Error'
                 '404':
                     description: No payment matching the provided ID exists in the database.
                 '500':
