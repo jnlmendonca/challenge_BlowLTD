@@ -1,8 +1,9 @@
 const request = require("supertest")
 const expect = require("chai").expect
+const uuidv4 = require('uuid/v4')
 const app = require("../app").default
 const models = require("../app").models
-const uuidv4 = require('uuid/v4')
+const errors = require("../config/errors")
 
 describe("api/v1", () => {
 
@@ -73,6 +74,7 @@ describe("api/v1", () => {
         })
     })
 
+    // GET api/v1/payment/ with low limit
     describe("GET /payments/?limit=5", () => {
         it("should return less records if requested", async () => {
 
@@ -100,6 +102,7 @@ describe("api/v1", () => {
         })
     })
 
+    // GET api/v1/payment/ with high limit
     describe("GET /payments/?limit=60", () => {
         it("should return a maximum of 50 records", async () => {
 
@@ -177,6 +180,7 @@ describe("api/v1", () => {
         })
     })
 
+    // GET api/v1/payment/ with offset
     describe("GET /payments/?offset=10", () => {
         it("should skip the first 10 records", async () => {
 
@@ -226,6 +230,7 @@ describe("api/v1", () => {
         })
     })
 
+    // GET api/v1/payment/ with ID
     describe("GET /payments/:id", () => {
         it("should return a payment record for a valid ID", async () => {
 
@@ -267,6 +272,59 @@ describe("api/v1", () => {
 
             // Evaluate response
             expect(response.status).to.equal(400)
+            expect(response.body).to.deep.equal(errors.InvalidIdError)
+        })
+    })
+
+    // POST api/v1/payment/
+    describe("POST /payments/", () => {
+        it("should return payment when input is valid", async () => {
+
+            // Define request data
+            let payment_data = {
+                version: 1,
+                organisation_id: '000000'
+            }
+
+            // Make request
+            const response = await request(app).post("/api/v1/payments/").send(payment_data)
+
+            // Evaluate response
+            expect(response.status).to.equal(201)
+            expect(response.body).to.have.property('organisation_id', '000000')
+            expect(response.body).to.have.property('version', 1)
+            expect(response.body).to.have.property('_id')
+
+            // Evaluate effect on DB
+            models.Payment.find({}, (err, payments) => {
+                expect(err).to.be.null
+                expect(payments.length).to.equal(1)
+                expect(payments[0].version).to.equal(payment_data.version)
+                expect(payments[0].organisation_id).to.equal(payment_data.organisation_id)
+                expect(payments[0]._id).to.equal(response.body._id)
+            })
+        })
+
+        it("should return a 400 error when input is invalid", async () => {
+
+            // Define invalid request data
+            let payment_data = {
+                version: 'AAAA',    // INVALID
+                organisation_id: '000000'
+            }
+
+            // Make request
+            const response = await request(app).post("/api/v1/payments/").send(payment_data)
+
+            // Evaluate response
+            expect(response.status).to.equal(400)
+            expect(response.body).to.deep.equal(errors.InvalidDataError)
+
+            // Evaluate effect on DB
+            models.Payment.find({}, (err, payments) => {
+                expect(err).to.be.null
+                expect(payments.length).to.equal(0)
+            })
         })
     })
 })
