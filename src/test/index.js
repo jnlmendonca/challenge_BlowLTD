@@ -268,7 +268,7 @@ describe("api/v1", () => {
             await payment.save()
 
             // Make request
-            const response = await request(app).get("/api/v1/payments/00000000-0000-5000-0000-000000000000 ")
+            const response = await request(app).get("/api/v1/payments/00000000-0000-5000-0000-000000000000")
 
             // Evaluate response
             expect(response.status).to.equal(400)
@@ -375,7 +375,7 @@ describe("api/v1", () => {
             await payment.save()
 
             // Make request
-            const response = await request(app).delete("/api/v1/payments/00000000-0000-5000-0000-000000000000 ")
+            const response = await request(app).delete("/api/v1/payments/00000000-0000-5000-0000-000000000000")
 
             // Evaluate response
             expect(response.status).to.equal(400)
@@ -385,6 +385,118 @@ describe("api/v1", () => {
             models.Payment.find({}, (err, payments) => {
                 expect(err).to.be.null
                 expect(payments.length).to.equal(1)
+            })
+        })
+    })
+
+    // PATCH api/v1/payment/ with ID
+    describe("PATCH /payments/:id", () => {
+        it("should update an existent payment record if ID exists and data is valid", async () => {
+
+            // Populate DB for test - 1 payment record
+            const payment = new models.Payment({ version: 1, organisation_id: '000000' })
+            await payment.save()
+
+            // Define update data
+            let update_data = {
+                version: 2,
+                organisation_id: '000001'
+            }
+
+            // Make request
+            const response = await request(app).patch("/api/v1/payments/" + payment._id).send(update_data)
+
+            // Evaluate response
+            expect(response.status).to.equal(200)
+            expect(response.body).to.have.property('organisation_id', '000001')
+            expect(response.body).to.have.property('version', 2)
+            expect(response.body).to.have.property('_id', payment._id)
+
+            // Evaluate effect on DB
+            models.Payment.findOne({_id: payment._id}, (err, payment) => {
+                expect(err).to.be.null
+                expect(payment).to.have.property('organisation_id', '000001')
+                expect(payment).to.have.property('version', 2)
+            })
+        })
+
+        it("should return a 404 for a non-existent ID", async () => {
+
+            // Populate DB for test - 1 payment record
+            const payment = new models.Payment({ version: 1, organisation_id: '000000' })
+            await payment.save()
+
+            // Define update data
+            let update_data = {
+                version: 2,
+                organisation_id: '000001'
+            }
+
+            // Make request
+            const response = await request(app).patch("/api/v1/payments/" + uuidv4()).send(update_data)
+
+            // Evaluate response
+            expect(response.status).to.equal(404)
+
+            // Evaluate effect on DB
+            models.Payment.findOne({_id: payment._id}, (err, payment) => {
+                expect(err).to.be.null
+                expect(payment).to.have.property('organisation_id', '000000')
+                expect(payment).to.have.property('version', 1)
+            })
+        })
+
+        it("should return a 400 for an invalid ID", async () => {
+
+            // Populate DB for test - 1 payment record
+            const payment = new models.Payment({ version: 1, organisation_id: '000000' })
+            await payment.save()
+
+            // Define update data
+            let update_data = {
+                version: 2,
+                organisation_id: '000001'
+            }
+
+            // Make request
+            const response = await request(app).patch("/api/v1/payments/00000000-0000-5000-0000-000000000000").send(update_data)
+
+            // Evaluate response
+            expect(response.status).to.equal(400)
+            expect(response.body).to.deep.equal(errors.InvalidIdError)
+
+            // Evaluate effect on DB
+            models.Payment.findOne({_id: payment._id}, (err, payment) => {
+                expect(err).to.be.null
+                expect(payment).to.have.property('organisation_id', '000000')
+                expect(payment).to.have.property('version', 1)
+            })
+        })
+
+        it("should return a 400 for an invalid input", async () => {
+
+            // Populate DB for test - 1 payment record
+            const payment = new models.Payment({ version: 1, organisation_id: '000000' })
+            await payment.save()
+
+            // Define update data
+            let update_data = {
+                version: 'AAAA',
+                organisation_id: '000001'
+            }
+
+            // Make request
+            const response = await request(app).patch("/api/v1/payments/" + payment._id).send(update_data)
+
+            // Evaluate response
+            expect(response.status).to.equal(400)
+            expect(response.body).to.deep.equal(errors.InvalidDataError)
+
+            // Evaluate effect on DB
+            models.Payment.findOne({_id: payment._id}, (err, payment) => {
+                expect(err).to.be.null
+                expect(payment).to.have.property('organisation_id', '000000')
+                expect(payment).to.have.property('version', 1)
             })
         })
     })
