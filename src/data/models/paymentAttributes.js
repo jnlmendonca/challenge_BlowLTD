@@ -1,7 +1,13 @@
 const mongoose = require('mongoose')
+const uuidv4 = require('uuid/v4')
 
 // Define schema
 const paymentAttributesSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        default: uuidv4,
+        match: /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+    },
     amount: {
         type: Number,
         required: true,
