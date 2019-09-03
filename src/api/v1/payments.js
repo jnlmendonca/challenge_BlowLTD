@@ -71,20 +71,13 @@ function deletePayment (req, res, next) {
         return res.status(400).send(errors.InvalidIdError)
     }
 
-    models.Payment.findOne({_id: req.params.id}, (err, payment) => {
+    models.Payment.findOneAndRemove({_id: req.params.id}, {useFindAndModify: false}, (err, payment) => {
         if (err || !payment) {
             console.log('Error deleting payment')
             return res.status(404).send()
         }
 
-        models.Payment.deleteOne({_id: req.params.id}, (err) => {
-            if (err) {
-                console.log('Error deleting payment')
-                return res.status(500).send()
-            }
-
-            return res.status(204).send()
-        })
+        return res.status(204).send()
     })
 }
 
