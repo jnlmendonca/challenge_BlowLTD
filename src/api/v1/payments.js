@@ -20,10 +20,6 @@ function listPayments (req, res, next) {
     }
 
     models.Payment.find({}, {createdAt: 0, updatedAt: 0, __v: 0}, {skip: offset, limit: limit, sort: {createdAt: 1}}, (err, payments) => {
-        if (err) {
-            console.log('Error finding payments')
-        }
-
         return res.status(200).json(payments)
     })
 }
@@ -40,7 +36,6 @@ function retrievePayment (req, res, next) {
 
     models.Payment.findOne({_id: req.params.id}, {createdAt: 0, updatedAt: 0, __v: 0}, (err, payment) => {
         if (err || !payment) {
-            console.log('Error finding payment')
             return res.status(404).send()
         }
 
@@ -53,7 +48,6 @@ function createPayment (req, res, next) {
 
     models.Payment.create(req.body, (err, payment) => {
         if (err || !payment) {
-            console.log('Error creating payment')
             return res.status(400).json(errors.InvalidDataError)
         }
 
@@ -73,7 +67,6 @@ function deletePayment (req, res, next) {
 
     models.Payment.findOneAndRemove({_id: req.params.id}, {useFindAndModify: false}, (err, payment) => {
         if (err || !payment) {
-            console.log('Error deleting payment')
             return res.status(404).send()
         }
 
@@ -93,12 +86,10 @@ function updatePayment (req, res, next) {
 
     models.Payment.findOneAndUpdate({_id: req.params.id}, req.body, {new: true, useFindAndModify: false, fields: {createdAt: 0, updatedAt: 0, __v: 0}}, (err, payment) => {
         if (err) {
-            console.log('Error updating payment')
             return res.status(400).json(errors.InvalidDataError)
         }
 
         if (!payment) {
-            console.log('Error updating payment')
             return res.status(404).send()
         }
 
