@@ -66,12 +66,12 @@ const paymentAttributesSchema = new mongoose.Schema({
     numeric_reference: {
         type: String,
         required: true,
-        match: '^[0-9]+$'
+        match: /^[0-9]+$/
     },
     payment_id: {
         type: String,
         required: true,
-        match: '^[0-9]+$'
+        match: /^[0-9]+$/
     }
 }, {
     timestamps: true
