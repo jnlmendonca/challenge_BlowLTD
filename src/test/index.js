@@ -234,7 +234,7 @@ describe("api/v1", () => {
     describe("GET /payments/:id", () => {
         it("should return a payment record for a valid ID", async () => {
 
-            // Populate DB for test - 20 payment records
+            // Populate DB for test - 1 payment record
             const payment = new models.Payment({ version: 1, organisation_id: '000000' })
             await payment.save()
 
@@ -248,7 +248,7 @@ describe("api/v1", () => {
             expect(response.body).to.have.property('_id', payment._id)
         })
 
-        it("should return a 404 error for an non-existent ID", async () => {
+        it("should return a 404 error for a non-existent ID", async () => {
 
             // Populate DB for test - 20 payment records
             const payment = new models.Payment({ version: 1, organisation_id: '000000' })
@@ -324,6 +324,67 @@ describe("api/v1", () => {
             models.Payment.find({}, (err, payments) => {
                 expect(err).to.be.null
                 expect(payments.length).to.equal(0)
+            })
+        })
+    })
+
+    // DELETE api/v1/payment/ with ID
+    describe("DELETE /payments/:id", () => {
+        it("should delete resource for an existent and valid ID", async () => {
+
+            // Populate DB for test - 1 payment record
+            const payment = new models.Payment({ version: 1, organisation_id: '000000' })
+            await payment.save()
+
+            // Make request
+            const response = await request(app).delete("/api/v1/payments/" + payment._id)
+
+            // Evaluate response
+            expect(response.status).to.equal(204)
+
+            // Evaluate effect on DB
+            models.Payment.find({}, (err, payments) => {
+                expect(err).to.be.null
+                expect(payments.length).to.equal(0)
+            })
+        })
+
+        it("should return a 404 for a non-existent ID", async () => {
+
+            // Populate DB for test - 1 payment record
+            const payment = new models.Payment({ version: 1, organisation_id: '000000' })
+            await payment.save()
+
+            // Make request
+            const response = await request(app).delete("/api/v1/payments/" + uuidv4())
+
+            // Evaluate response
+            expect(response.status).to.equal(404)
+
+            // Evaluate effect on DB
+            models.Payment.find({}, (err, payments) => {
+                expect(err).to.be.null
+                expect(payments.length).to.equal(1)
+            })
+        })
+
+        it("should return a 400 for an invalid ID", async () => {
+
+            // Populate DB for test - 1 payment record
+            const payment = new models.Payment({ version: 1, organisation_id: '000000' })
+            await payment.save()
+
+            // Make request
+            const response = await request(app).delete("/api/v1/payments/00000000-0000-5000-0000-000000000000 ")
+
+            // Evaluate response
+            expect(response.status).to.equal(400)
+            expect(response.body).to.deep.equal(errors.InvalidIdError)
+
+            // Evaluate effect on DB
+            models.Payment.find({}, (err, payments) => {
+                expect(err).to.be.null
+                expect(payments.length).to.equal(1)
             })
         })
     })
