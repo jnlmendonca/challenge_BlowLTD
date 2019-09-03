@@ -411,8 +411,15 @@ describe("api/v1", () => {
             expect(response.body).to.have.property('organisation_id', '000000')
             expect(response.body).to.have.property('version', 1)
             expect(response.body).to.have.property('attributes')
+            expect(response.body).to.not.have.property('createdAt')
+            expect(response.body).to.not.have.property('updatedAt')
+            expect(response.body).to.not.have.property('__v')
             expect(response.body.attributes).to.deep.include(paymentData.attributes)
             expect(response.body.attributes).to.have.property('processing_timestamp')
+            expect(response.body.attributes).to.not.have.property('_id')
+            expect(response.body.attributes).to.not.have.property('createdAt')
+            expect(response.body.attributes).to.not.have.property('updatedAt')
+            expect(response.body.attributes).to.not.have.property('__v')
         })
 
         it("should return a 400 error for invalid amount", async () => {
