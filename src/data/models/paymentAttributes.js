@@ -73,6 +73,8 @@ const paymentAttributesSchema = new mongoose.Schema({
         required: true,
         match: '^[0-9]+$'
     }
+}, {
+    timestamps: true
 })
 
 // Define Model

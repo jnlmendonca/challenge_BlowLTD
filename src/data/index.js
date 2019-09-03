@@ -1,7 +1,6 @@
 var mongoose = require('mongoose')
 var models = require('./models')
 
-console.log(models)
 
 // Define connection parameters
 const username = process.env.MONGO_INITDB_ROOT_USERNAME

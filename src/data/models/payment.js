@@ -21,6 +21,8 @@ const paymentSchema = new mongoose.Schema({
     attributes: {
         type: paymentAttributesSchema
     }
+}, {
+    timestamps: true
 })
 
 // Define model

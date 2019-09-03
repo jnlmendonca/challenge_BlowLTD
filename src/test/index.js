@@ -2,6 +2,7 @@ const request = require("supertest")
 const expect = require("chai").expect
 const app = require("../app").default
 const models = require("../app").models
+const uuidv4 = require('uuid/v4')
 
 describe("api/v1", () => {
 
@@ -179,7 +180,7 @@ describe("api/v1", () => {
     describe("GET /payments/?offset=10", () => {
         it("should skip the first 10 records", async () => {
 
-            // Populate DB for test - 20 payment records
+            // Populate DB for test - 10 payment records
             const payments = [
                 { version: 1, organisation_id: '000000' },
                 { version: 1, organisation_id: '000001' },
@@ -190,7 +191,13 @@ describe("api/v1", () => {
                 { version: 1, organisation_id: '000006' },
                 { version: 1, organisation_id: '000007' },
                 { version: 1, organisation_id: '000008' },
-                { version: 1, organisation_id: '000009' },
+                { version: 1, organisation_id: '000009' }
+            ]
+            await models.Payment.create(payments)
+
+            // Populate DB for test - 10 extra payment records
+            // This will allow the separation by creation date
+            const extra_payments = [
                 { version: 1, organisation_id: '000010' },
                 { version: 1, organisation_id: '000011' },
                 { version: 1, organisation_id: '000012' },
@@ -202,7 +209,7 @@ describe("api/v1", () => {
                 { version: 1, organisation_id: '000018' },
                 { version: 1, organisation_id: '000019' }
             ]
-            await models.Payment.create(payments)
+            await models.Payment.create(extra_payments)
 
             // Make request
             const response = await request(app).get("/api/v1/payments/?offset=10")
@@ -214,9 +221,8 @@ describe("api/v1", () => {
             const organisationIds = response.body.map(record => {
                 return parseInt(record.organisation_id)
             })
-            organisationIds.forEach(id => {
-                expect(id).to.be.above(9)
-            })
+            expect(Math.min(...organisationIds)).to.equal(10)
+            expect(Math.max(...organisationIds)).to.equal(19)
         })
     })
 
@@ -237,18 +243,30 @@ describe("api/v1", () => {
             expect(response.body).to.have.property('_id', payment._id)
         })
 
-
-        it("should return a 404 error for an invalid ID", async () => {
+        it("should return a 404 error for an non-existent ID", async () => {
 
             // Populate DB for test - 20 payment records
             const payment = new models.Payment({ version: 1, organisation_id: '000000' })
             await payment.save()
 
             // Make request
-            const response = await request(app).get("/api/v1/payments/999999")
+            const response = await request(app).get("/api/v1/payments/" + uuidv4())
 
             // Evaluate response
             expect(response.status).to.equal(404)
+        })
+
+        it("should return a 400 error for an invalid ID", async () => {
+
+            // Populate DB for test - 20 payment records
+            const payment = new models.Payment({ version: 1, organisation_id: '000000' })
+            await payment.save()
+
+            // Make request
+            const response = await request(app).get("/api/v1/payments/00000000-0000-5000-0000-000000000000 ")
+
+            // Evaluate response
+            expect(response.status).to.equal(400)
         })
     })
 })

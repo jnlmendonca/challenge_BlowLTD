@@ -1,10 +1,5 @@
 const express = require('express')
-
-// Define v1 api
-const v1 = express.Router()
-v1.get('/payments', function (req, res, next) {
-    res.send('ok')
-})
+const v1 = require('./v1')
 
 // Define general api
 const api = express.Router()
