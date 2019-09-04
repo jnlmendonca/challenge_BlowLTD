@@ -245,7 +245,7 @@ describe("api/v1", () => {
             expect(response.status).to.equal(200)
             expect(response.body).to.have.property('organisation_id', '000000')
             expect(response.body).to.have.property('version', 1)
-            expect(response.body).to.have.property('_id', payment._id)
+            expect(response.body).to.have.property('id', payment._id)
         })
 
         it("should return a complete payment with attributes", async () => {
@@ -280,7 +280,7 @@ describe("api/v1", () => {
             expect(response.status).to.equal(200)
             expect(response.body).to.have.property('organisation_id', '000000')
             expect(response.body).to.have.property('version', 1)
-            expect(response.body).to.have.property('_id', payment._id)
+            expect(response.body).to.have.property('id', payment._id)
             expect(response.body).to.have.property('attributes')
             expect(response.body.attributes).to.have.property('amount', payment.attributes.amount)
             expect(response.body.attributes).to.have.property('currency', payment.attributes.currency)
@@ -344,7 +344,7 @@ describe("api/v1", () => {
             expect(response.status).to.equal(201)
             expect(response.body).to.have.property('organisation_id', '000000')
             expect(response.body).to.have.property('version', 1)
-            expect(response.body).to.have.property('_id')
+            expect(response.body).to.have.property('id')
 
             // Evaluate effect on DB
             models.Payment.find({}, (err, payments) => {
@@ -352,7 +352,7 @@ describe("api/v1", () => {
                 expect(payments.length).to.equal(1)
                 expect(payments[0].version).to.equal(paymentData.version)
                 expect(payments[0].organisation_id).to.equal(paymentData.organisation_id)
-                expect(payments[0]._id).to.equal(response.body._id)
+                expect(payments[0]._id).to.equal(response.body.id)
             })
         })
 
@@ -407,7 +407,7 @@ describe("api/v1", () => {
 
             // Evaluate response
             expect(response.status).to.equal(201)
-            expect(response.body).to.have.property('_id')
+            expect(response.body).to.have.property('id')
             expect(response.body).to.have.property('organisation_id', '000000')
             expect(response.body).to.have.property('version', 1)
             expect(response.body).to.have.property('attributes')
@@ -1037,7 +1037,7 @@ describe("api/v1", () => {
             expect(response.status).to.equal(200)
             expect(response.body).to.have.property('organisation_id', '000001')
             expect(response.body).to.have.property('version', 2)
-            expect(response.body).to.have.property('_id', payment._id)
+            expect(response.body).to.have.property('id', payment._id)
 
             // Evaluate effect on DB
             models.Payment.findOne({_id: payment._id}, (err, payment) => {
