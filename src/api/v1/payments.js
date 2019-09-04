@@ -95,7 +95,18 @@ function createPayment (req, res, next) {
             return res.status(400).json(errors.InvalidDataError)
         }
 
-        return res.status(201).json(payment)
+        let paymentCopy = JSON.parse(JSON.stringify(payment))
+        delete paymentCopy.createdAt
+        delete paymentCopy.updatedAt
+        delete paymentCopy.__v
+        if (paymentCopy.attributes) {
+            delete paymentCopy.attributes._id
+            delete paymentCopy.attributes.createdAt
+            delete paymentCopy.attributes.updatedAt
+            delete paymentCopy.attributes.__v
+        }
+
+        return res.status(201).json(paymentCopy)
     })
 }
 
