@@ -100,7 +100,7 @@ function createPayment (req, res, next) {
         delete paymentCopy.updatedAt
         delete paymentCopy.__v
         if (paymentCopy.attributes) {
-            delete paymentCopy.attributes._id
+            delete paymentCopy.attributes.id
             delete paymentCopy.attributes.createdAt
             delete paymentCopy.attributes.updatedAt
             delete paymentCopy.attributes.__v
