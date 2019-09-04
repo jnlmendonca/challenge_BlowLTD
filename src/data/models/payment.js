@@ -22,7 +22,19 @@ const paymentSchema = new mongoose.Schema({
         type: paymentAttributesSchema
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toObject: {
+        transform: function (doc, ret) {
+            ret.id = ret._id
+            delete ret._id;
+        }
+    },
+    toJSON: {
+        transform: function (doc, ret) {
+            ret.id = ret._id
+            delete ret._id;
+        }
+    }
 })
 
 // Define model
