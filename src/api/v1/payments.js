@@ -1,3 +1,4 @@
+var flatten = require('flat')
 const models = require('../../data')
 const errors = require('../../config/errors')
 
@@ -135,7 +136,7 @@ function updatePayment (req, res, next) {
         return res.status(400).send(errors.InvalidIdError)
     }
 
-    models.Payment.findOneAndUpdate({_id: req.params.id}, req.body, {new: true, useFindAndModify: false, fields: {createdAt: 0, updatedAt: 0, __v: 0, 'attributes._id': 0, 'attributes.createdAt': 0, 'attributes.updatedAt': 0, 'attributes.__v': 0}}, (err, payment) => {
+    models.Payment.findOneAndUpdate({_id: req.params.id}, {'$set': flatten(req.body)}, {new: true, omitUndefined: true, useFindAndModify: false, fields: {createdAt: 0, updatedAt: 0, __v: 0, 'attributes._id': 0, 'attributes.createdAt': 0, 'attributes.updatedAt': 0, 'attributes.__v': 0}}, (err, payment) => {
         if (err) {
             return res.status(400).json(errors.InvalidDataError)
         }
