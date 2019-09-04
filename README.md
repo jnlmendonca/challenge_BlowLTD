@@ -72,9 +72,9 @@ For the design stage of the test, only the first four points seem to matter. The
 
 I will use **OpenAPI version 3** specification to create a description of the payment API. This description can then be used in conjunction with other tools to validate requests, easily test the API implementation and create the documentation as requested.
 
-My original plan was to use a tool that could take the API definition file as an input and return a fully formatted PDF with its description. I tried several tools like [rapi-pdf](https://mrin9.github.io/RapiPdf/) and [swagger-spec-to-pdf](https://github.com/agreatfool/swagger-spec-to-pdf). However, at the time they were either broken or I could't get the results with the quality I expected. **I ended up using what many suggest: use [Swagger Editor](https://editor.swagger.io) to convert to html and then print as PDF.** I'm not 100% happy with the result, so I'll try to come up with a better solution.
+My original plan was to use a tool that could take the API definition file as an input and return a fully formatted PDF with its description. I tried several tools like [rapi-pdf](https://mrin9.github.io/RapiPdf/) and [swagger-spec-to-pdf](https://github.com/agreatfool/swagger-spec-to-pdf). However, at the time they were either broken or I could't get the results with the quality I expected. **I ended up using what many suggest: use [Swagger Editor](https://editor.swagger.io) to convert to html and then print as PDF.**
 
-I plan to use *node.js* and *express* to run the implementation stage. The code should run inside a docker container exposed of port 3000.
+The PDF definition of the API is name **payment_api.pdf** and can be found in the root of this repository.
 
 ### Implementation Task
 I will be using *node.js* and *express* to run the implementation stage. The code will run inside a docker container exposed of port 3000. Also, I will use Compose to run the server container next to another container running the database service. The only tools you will need to run the code are Docker and Docker Compose.
@@ -82,3 +82,17 @@ I will be using *node.js* and *express* to run the implementation stage. The cod
 I will be using [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/) to create a TDD/BDD test suite. [MongoDB](https://www.mongodb.com) will be the database and [Mongoose](https://mongoosejs.com/) will serve as ODM.
 
 Because the MongoDB container may take longer to be ready than the app one takes to start sending requests, I'll be using [wait-for-it](https://github.com/vishnubob/wait-for-it) as sugested in https://docs.docker.com/compose/startup-order/ to make the app container wait before running the app *start command*.
+
+Next steps of the implementation task should include adding more features expected in production, like logging, extra listing options like filtering, sorting, etc. and a better way to configure the application.
+
+To sum up the several endpoints of the api:
+
+- http://localhost:3000/api/v1/payments/
+    + GET - list payment records
+    + POST - create payment record
+- http://localhost:3000/api/v1/payments/:id
+    + GET - retrieve payment record
+    + DELETE - delete payment record
+    + PATCH - update payment record
+
+Details on how the data to include for each endpoint should be consulted on the included PDF.
