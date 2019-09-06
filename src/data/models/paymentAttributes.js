@@ -65,7 +65,7 @@ const paymentAttributesSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    processing_timestamp: {
+    processing_date: {
         type: Date,
         default: Date.now
     },

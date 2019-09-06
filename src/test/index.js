@@ -296,7 +296,7 @@ describe("api/v1", () => {
             expect(response.body.attributes).to.have.property('end_to_end_reference', payment.attributes.end_to_end_reference)
             expect(response.body.attributes).to.have.property('numeric_reference', payment.attributes.numeric_reference)
             expect(response.body.attributes).to.have.property('payment_id', payment.attributes.payment_id)
-            expect(response.body.attributes).to.have.property('processing_timestamp')
+            expect(response.body.attributes).to.have.property('processing_date')
         })
 
         it("should return a 404 error for a non-existent ID", async () => {
@@ -415,7 +415,7 @@ describe("api/v1", () => {
             expect(response.body).to.not.have.property('updatedAt')
             expect(response.body).to.not.have.property('__v')
             expect(response.body.attributes).to.deep.include(paymentData.attributes)
-            expect(response.body.attributes).to.have.property('processing_timestamp')
+            expect(response.body.attributes).to.have.property('processing_date')
             expect(response.body.attributes).to.not.have.property('_id')
             expect(response.body.attributes).to.not.have.property('createdAt')
             expect(response.body.attributes).to.not.have.property('updatedAt')

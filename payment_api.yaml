@@ -125,7 +125,7 @@ components:
                     payment_id: 123456789012345
                     payment_purpose: Paying for goods/services
                     end_to_end_reference: Wil piano Jan
-                    processing_timestamp: 1566998801878
+                    processing_date: 1566998801878
 
         PaymentInput:
             type: object
@@ -194,9 +194,9 @@ components:
                     type: string
                     nullable: true
                     example: Another description of the payment
-                processing_timestamp:
+                processing_date:
                     type: string
-                    description: Timestamp for the payment's processing operation. Replaces the processing_date string.
+                    description: A date string of the payment's processing time.
                     readOnly: true
                     example: 2019-09-04T01:09:26.939Z
                 numeric_reference:
@@ -222,7 +222,7 @@ components:
                 payment_id: 123456789012345
                 payment_purpose: Paying for goods/services
                 end_to_end_reference: Wil piano Jan
-                processing_timestamp: 1566998801878
+                processing_date: 1566998801878
 
         PaymentAttributesInput:
             type: object
