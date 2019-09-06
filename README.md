@@ -76,6 +76,8 @@ My original plan was to use a tool that could take the API definition file as an
 
 The PDF definition of the API is name **payment_api.pdf** and can be found in the root of this repository.
 
+Another alternative is to load the code in **payment_api.yaml** to a tool like [Swagger Editor](https://editor.swagger.io/) and interact directly with the description of the API.
+
 ### Implementation Task
 I will be using *node.js* and *express* to run the implementation stage. The code will run inside a docker container exposed of port 3000. Also, I will use Compose to run the server container next to another container running the database service. The only tools you will need to run the code are Docker and Docker Compose.
 
