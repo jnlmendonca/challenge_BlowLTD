@@ -16,8 +16,8 @@
   "author": "José Mendonça <jnl.mendonca@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
     "flat": "^4.1.0",
     "mongoose": "^5.6.11",
     "supertest": "^4.0.2",
